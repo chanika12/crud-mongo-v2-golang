@@ -1,13 +1,14 @@
 package injecter
 
 import (
+	"crud/app/commands"
 	"crud/app/services"
-	"crud/interfaces/api"
+	"crud/domain/repository"
 	"github.com/google/wire"
 )
 
-func ProvideOrderService(createHandler services.IOrderService) *api.OrderHandler {
-	return api.NewOrderHandler(createHandler)
+func ProvideOrderService(createHandler repository.IOrderRepository) services.IOrderService {
+	return commands.NewOrderService(createHandler)
 }
 
 var ServiceProviderSet = wire.NewSet(
