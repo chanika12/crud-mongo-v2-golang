@@ -14,9 +14,13 @@ type Configuration struct {
 	Mongo mongoConfig
 }
 
-var Env = Configuration{
-	Mongo: mongoConfig{
-		Host:   os.Getenv("HOST_MONGO"),
-		DbName: os.Getenv("DB_MONGO_NAME"),
-	},
+var Env *Configuration
+
+func LoadConfig() {
+	Env = &Configuration{
+		Mongo: mongoConfig{
+			Host:   os.Getenv("HOST_MONGO"),
+			DbName: os.Getenv("DB_MONGO_NAME"),
+		},
+	}
 }
