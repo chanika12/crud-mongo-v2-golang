@@ -2,7 +2,9 @@ package injecter
 
 import (
 	"crud/app/commands"
+	"crud/app/services"
 	"crud/domain/repository"
+	"crud/infrastructure/config"
 	mongoDb "crud/infrastructure/db"
 	"crud/infrastructure/http"
 	"crud/interfaces/api"
@@ -13,18 +15,18 @@ import (
 )
 
 func NewMongoDatabase(client *mongo.Client) *mongo.Database {
-	return client.Database("orderservice")
+	return client.Database(config.Env.Mongo.DbName)
 }
 
-func ProvideOrderRepository(db *mongo.Database) repository.OrderRepository {
+func ProvideOrderRepository(db *mongo.Database) repository.IOrderRepository {
 	return mongoDb.NewMongoOrderRepository(db)
 }
 
-func ProvideCreateOrderHandler(repo repository.OrderRepository) *commands.CreateOrderHandler {
-	return commands.NewCreateOrderHandler(repo)
+func ProvideCreateOrderHandler(repo repository.IOrderRepository) services.IOrderService {
+	return commands.NewOrderHandler(repo)
 }
 
-func ProvideOrderHandler(createHandler *commands.CreateOrderHandler) *api.OrderHandler {
+func ProvideOrderHandler(createHandler services.IOrderService) *api.OrderHandler {
 	return api.NewOrderHandler(createHandler)
 }
 

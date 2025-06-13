@@ -1,26 +1,20 @@
 package commands
 
 import (
-	"context"
+	"crud/app/services"
 	"crud/domain/model"
 	"crud/domain/repository"
 )
 
-type CreateOrderCommand struct {
-	OrderID    string
-	CustomerID string
-	Total      float64
+type OrderService struct {
+	orderRepo repository.IOrderRepository
 }
 
-type CreateOrderHandler struct {
-	OrderRepo repository.OrderRepository
+func NewOrderHandler(orderRepo repository.IOrderRepository) services.IOrderService {
+	return &OrderService{orderRepo: orderRepo}
 }
 
-func NewCreateOrderHandler(orderRepo repository.OrderRepository) *CreateOrderHandler {
-	return &CreateOrderHandler{OrderRepo: orderRepo}
-}
-
-func (h *CreateOrderHandler) Handle(ctx context.Context, cmd CreateOrderCommand) error {
-	order := model.NewOrder(cmd.OrderID, cmd.CustomerID, cmd.Total)
-	return h.OrderRepo.Save(ctx, order)
+func (h *OrderService) CreateOrderService(order model.Order) error {
+	//order := model.NewOrder(cmd.OrderID, cmd.CustomerID, cmd.Total)
+	return h.orderRepo.Save(order)
 }
